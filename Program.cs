@@ -17,6 +17,10 @@ builder.Services.AddHostedService<ReminderBackgroundService>();
 // Register service for sending emails
 builder.Services.AddHttpClient<IEmailService, BrevoEmailService>();
 
+// Add health checks
+builder.Services.AddHealthChecks()
+    .AddDbContextCheck<ReminderDbContext>("database");
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -29,13 +33,14 @@ if (app.Environment.IsDevelopment())
 else
 {
     app.UseExceptionHandler("/error");
+    app.UseHttpsRedirection();
 }
-
-app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapHealthChecks("/health");
 
 // Add a simple error endpoint
 app.Map("/error", (HttpContext context) =>
