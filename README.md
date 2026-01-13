@@ -1,46 +1,42 @@
 # Reminder API
 
-.NET 8 Web API for reminders with background processing.
+.NET 8 Web API for email reminders.
 
-## How to run
+## Setup
+```bash
+dotnet restore
+dotnet ef database update
+dotnet user-secrets set "Brevo:ApiKey" "your-key"
+dotnet run
+```
 
-1. Install .NET 8 SDK
-2. `dotnet restore`
-3. `dotnet ef database update` (creates reminders.db)
-4. `dotnet run`
-5. API runs on https://localhost:5001/swagger
+API: http://localhost:5125/swagger
+
+## Features
+- REST API (POST/GET reminders)
+- Background email processing
+- Retry logic
+- Input validation
+- Health checks
+- Configurable intervals
 
 ## API
+- `POST /reminders` - Create reminder
+- `GET /reminders` - List reminders
+- `GET /health` - Health check
 
-### POST /reminders
-Create reminder:
-```json
-{
-  "message": "Don't forget meeting",
-  "sendAt": "2026-01-13T15:00:00Z",
-  "email": "user@example.com"
-}
-```
+## Approach & Design Decisions
 
-### GET /reminders
-Get all reminders:
-```json
-[
-  { "id": "1", "message": "Check logs", "sendAt": "2025-10-10T14:30:00Z", "status": "Scheduled" }
-]
-```
-
-## Design
-
-- .NET 8 + ASP.NET Core
-- SQLite database (no setup needed)
-- BackgroundService checks every 30s for due reminders
-- Status: Scheduled → Sent
-- Email field optional
+- **Minimal API**: Used ASP.NET Core Web API with controllers for clean REST endpoints
+- **Background Processing**: Hosted service checks reminders every configurable interval (30s prod, 5s dev)
+- **Database**: SQLite with EF Core for simplicity and zero-config deployment
+- **Email**: Brevo API with 3-attempt retry and exponential backoff for reliability
+- **Validation**: DataAnnotations with custom validators and ModelState for input validation
+- **Error Handling**: Global exception handling in dev, proper status codes
+- **Security**: API keys via user secrets/env vars, never committed
+- **Health Checks**: Database connectivity monitoring for production readiness
 
 ## Files
-
-- Controllers/RemindersController.cs - API endpoints
-- Models/ - Reminder, Status enum
-- Services/ReminderBackgroundService.cs - background processing
-- Data/ReminderDbContext.cs - EF Core setup
+- Controllers/RemindersController.cs
+- Services/ReminderBackgroundService.cs
+- Services/EmailService.cs
