@@ -1,8 +1,10 @@
-Microsoft Visual Studio Solution File, Format Version 12.00
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.2.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReminderApi", "ReminderApi.csproj", "{34D7B4D3-0FF5-D344-2BF2-5DA3B0479471}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReminderApi.Tests", "ReminderApi.Tests\ReminderApi.Tests.csproj", "{98EB8BA6-22DF-44E2-868F-946C7052C4EE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -14,6 +16,10 @@ Global
 		{34D7B4D3-0FF5-D344-2BF2-5DA3B0479471}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{34D7B4D3-0FF5-D344-2BF2-5DA3B0479471}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{34D7B4D3-0FF5-D344-2BF2-5DA3B0479471}.Release|Any CPU.Build.0 = Release|Any CPU
+		{98EB8BA6-22DF-44E2-868F-946C7052C4EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{98EB8BA6-22DF-44E2-868F-946C7052C4EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{98EB8BA6-22DF-44E2-868F-946C7052C4EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{98EB8BA6-22DF-44E2-868F-946C7052C4EE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
