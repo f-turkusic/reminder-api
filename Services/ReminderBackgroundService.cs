@@ -16,12 +16,14 @@ public class ReminderBackgroundService : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        _logger.LogInformation("Reminder Background Service started.");
+        Console.WriteLine($"[{DateTime.UtcNow:yyyy-MM-ddTHH:mm:ssZ}] Reminder Background Service started.");
 
         while (!stoppingToken.IsCancellationRequested)
         {
             try
             {
+                Console.WriteLine($"[{DateTime.UtcNow:yyyy-MM-ddTHH:mm:ssZ}] Checking for reminders at UTC now.");
+
                 using var scope = _services.CreateScope();
                 var db = scope.ServiceProvider.GetRequiredService<ReminderDbContext>();
 
@@ -33,7 +35,7 @@ public class ReminderBackgroundService : BackgroundService
                 foreach (var reminder in remindersToSend)
                 {
                     // Log reminder to console
-                    _logger.LogInformation($"Reminder: {reminder.Message} | Email: {reminder.Email ?? "none"} | SendAt: {reminder.SendAt}");
+                    Console.WriteLine($"[{DateTime.UtcNow:yyyy-MM-ddTHH:mm:ssZ}] Reminder sent: {reminder.Message}");
 
                     // optional send email
                     if (!string.IsNullOrEmpty(reminder.Email))
@@ -50,7 +52,7 @@ public class ReminderBackgroundService : BackgroundService
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error processing reminders.");
+                Console.WriteLine($"[{DateTime.UtcNow:yyyy-MM-ddTHH:mm:ssZ}] Error processing reminders: {ex.Message}");
             }
 
             // Check every 30 seconds
