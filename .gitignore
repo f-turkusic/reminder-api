@@ -1,28 +1,51 @@
-# Build results
+# -------------------------------
+# .NET / Visual Studio
+# -------------------------------
+
+# Build Folders
 bin/
 obj/
 
 # User-specific files
 *.user
-*.rsuser
 *.suo
 *.userosscache
 *.sln.docstates
 
-# Visual Studio Code
+# VS Code settings
 .vscode/
 
-# Rider
+# Rider settings
 .idea/
 
-# OS files
-.DS_Store
-Thumbs.db
-
-# Logs
-*.log
-
+# -------------------------------
 # SQLite
+# -------------------------------
+
+# Ignore SQLite database files
 *.db
 *.db-shm
 *.db-wal
+
+# -------------------------------
+# Logs
+# -------------------------------
+
+*.log
+
+# -------------------------------
+# NuGet Packages
+# -------------------------------
+
+# The packages folder can be ignored because of Package Restore
+**/packages/*
+
+# -------------------------------
+# Other temp files
+# -------------------------------
+
+# Temporary files, backup files
+*.tmp
+*.bak
+*.swp
+*.DS_Store

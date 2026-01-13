@@ -8,5 +8,5 @@ public class Reminder
     public string Message { get; set; } = null!;
     public DateTime SendAt { get; set; }
     public string? Email { get; set; }
-    public ReminderStatus Status { get; set; }
+    public ReminderStatus Status { get; set; } = ReminderStatus.Scheduled;
 }
