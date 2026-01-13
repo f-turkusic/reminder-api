@@ -94,8 +94,7 @@
               "});",
               "",
               "pm.test(\"Health is Healthy\", function () {",
-              "    var jsonData = pm.response.json();",
-              "    pm.expect(jsonData.status).to.eql('Healthy');",
+              "    pm.expect(pm.response.text()).to.eql('Healthy');",
               "});"
             ]
           }
