@@ -17,7 +17,7 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\"message\": \"Test reminder\", \"sendAt\": \"2026-01-13T15:00:00Z\", \"email\": \"test@example.com\"}"
+          "raw": "{\"message\": \"Test reminder\", \"sendAt\": \"2099-12-31T23:59:59Z\", \"email\": \"test@example.com\"}"
         },
         "url": {
           "raw": "{{baseUrl}}/reminders",
