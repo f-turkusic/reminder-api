@@ -1,6 +1,12 @@
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+builder.Services.AddDbContext<ReminderDbContext>(options => 
+    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"))); // Use SQLite if you want, change it to UseNpgsql for PostgreSQL or any other DBMS
+
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
