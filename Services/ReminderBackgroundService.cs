@@ -16,26 +16,28 @@ public class ReminderBackgroundService : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        Console.WriteLine($"[{DateTime.UtcNow:yyyy-MM-ddTHH:mm:ssZ}] Reminder Background Service started.");
+        var bosniaTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time");
+        Console.WriteLine($"[{TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, bosniaTimeZone):yyyy-MM-ddTHH:mm:ss}] Reminder Background Service started.");
 
         while (!stoppingToken.IsCancellationRequested)
         {
             try
             {
-                Console.WriteLine($"[{DateTime.UtcNow:yyyy-MM-ddTHH:mm:ssZ}] Checking for reminders at UTC now.");
+                var now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, bosniaTimeZone);
+                Console.WriteLine($"[{now:yyyy-MM-ddTHH:mm:ss}] Checking for reminders at Bosnia time now.");
 
                 using var scope = _services.CreateScope();
                 var db = scope.ServiceProvider.GetRequiredService<ReminderDbContext>();
 
                 // Get all reminders that are scheduled and ready to send
                 var remindersToSend = await db.Reminders
-                    .Where(r => r.Status == ReminderStatus.Scheduled && r.SendAt <= DateTime.UtcNow)
+                    .Where(r => r.Status == ReminderStatus.Scheduled && r.SendAt <= now)
                     .ToListAsync(stoppingToken);
 
                 foreach (var reminder in remindersToSend)
                 {
                     // Log reminder to console
-                    Console.WriteLine($"[{DateTime.UtcNow:yyyy-MM-ddTHH:mm:ssZ}] Reminder sent: {reminder.Message}");
+                    Console.WriteLine($"[{now:yyyy-MM-ddTHH:mm:ss}] Reminder sent: {reminder.Message}");
 
                     // optional send email
                     if (!string.IsNullOrEmpty(reminder.Email))
@@ -52,7 +54,8 @@ public class ReminderBackgroundService : BackgroundService
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[{DateTime.UtcNow:yyyy-MM-ddTHH:mm:ssZ}] Error processing reminders: {ex.Message}");
+                var errorTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, bosniaTimeZone);
+                Console.WriteLine($"[{errorTime:yyyy-MM-ddTHH:mm:ss}] Error processing reminders: {ex.Message}");
             }
 
             // Check every 30 seconds
