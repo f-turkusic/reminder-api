@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using ReminderApi.Models;
 
 namespace ReminderApi.Controllers;
@@ -40,5 +41,22 @@ public class RemindersController : ControllerBase
             Status = reminder.Status.ToString(),
             reminder.SendAt
         });
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetAllReminders()
+    {
+        var reminders = await _db.Reminders
+            .OrderByDescending(r => r.SendAt)
+            .Select(r => new
+            {
+                id = r.Id.ToString(),
+                message = r.Message,
+                sendAt = r.SendAt.ToString("yyyy-MM-ddTHH:mm:ssZ"),
+                status = r.Status.ToString()
+            })
+            .ToListAsync();
+
+        return Ok(reminders);
     }
 }
