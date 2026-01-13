@@ -36,6 +36,14 @@ else
     app.UseHttpsRedirection();
 }
 
+// AUTO APPLY MIGRATIONS
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<ReminderDbContext>();
+    db.Database.Migrate();
+}
+
 app.UseAuthorization();
 
 app.MapControllers();
