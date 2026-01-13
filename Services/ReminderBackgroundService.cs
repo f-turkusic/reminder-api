@@ -7,17 +7,35 @@ public class ReminderBackgroundService : BackgroundService
 {
     private readonly IServiceProvider _services;
     private readonly ILogger<ReminderBackgroundService> _logger;
+    private readonly IConfiguration _configuration;
 
-    public ReminderBackgroundService(IServiceProvider services, ILogger<ReminderBackgroundService> logger)
+    private readonly IEmailService? _emailService;
+
+    public ReminderBackgroundService(IServiceProvider services, ILogger<ReminderBackgroundService> logger, IConfiguration configuration)
     {
         _services = services;
         _logger = logger;
+        _configuration = configuration;
     }
+
+    public ReminderBackgroundService(
+    IServiceProvider services,
+    ILogger<ReminderBackgroundService> logger,
+    IConfiguration configuration,
+    IEmailService emailService)
+    {
+        _services = services;
+        _logger = logger;
+        _configuration = configuration;
+        _emailService = emailService;
+    }
+
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
+        var intervalSeconds = _configuration.GetValue<int>("ReminderCheckIntervalSeconds", 30); // Default to 30 if not set
         var bosniaTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time");
-        Console.WriteLine($"[{TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, bosniaTimeZone):yyyy-MM-ddTHH:mm:ss}] Reminder Background Service started.");
+        Console.WriteLine($"[{TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, bosniaTimeZone):yyyy-MM-ddTHH:mm:ss}] Reminder Background Service started with check interval: {intervalSeconds} seconds.");
 
         while (!stoppingToken.IsCancellationRequested)
         {
@@ -39,10 +57,10 @@ public class ReminderBackgroundService : BackgroundService
                     // Log reminder to console
                     Console.WriteLine($"[{now:yyyy-MM-ddTHH:mm:ss}] Reminder sent: {reminder.Message}");
 
-                    // optional send email
-                    if (!string.IsNullOrEmpty(reminder.Email))
+                    // send email
+                    if (!string.IsNullOrEmpty(reminder.Email) && _emailService != null)
                     {
-                        // await EmailService.SendEmail(reminder.Email, "Reminder", reminder.Message);
+                        await _emailService.SendEmailAsync(reminder.Email, "Reminder", reminder.Message);
                     }
 
                     // Mark as sent
@@ -58,8 +76,8 @@ public class ReminderBackgroundService : BackgroundService
                 Console.WriteLine($"[{errorTime:yyyy-MM-ddTHH:mm:ss}] Error processing reminders: {ex.Message}");
             }
 
-            // Check every 30 seconds
-            await Task.Delay(TimeSpan.FromSeconds(30), stoppingToken);
+            // Check every configured interval
+            await Task.Delay(TimeSpan.FromSeconds(intervalSeconds), stoppingToken);
         }
     }
 }
