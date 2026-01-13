@@ -24,6 +24,11 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.UseDeveloperExceptionPage();
+}
+else
+{
+    app.UseExceptionHandler("/error");
 }
 
 app.UseHttpsRedirection();
@@ -31,5 +36,12 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+// Add a simple error endpoint
+app.Map("/error", (HttpContext context) =>
+{
+    context.Response.StatusCode = 500;
+    return Results.Json(new { error = "An unexpected error occurred." });
+});
 
 app.Run();
