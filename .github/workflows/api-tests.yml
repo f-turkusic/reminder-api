@@ -1,0 +1,47 @@
+name: API Tests
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build
+      run: dotnet build --no-restore
+
+    - name: Run unit tests
+      run: dotnet test --no-build --verbosity normal
+
+    - name: Setup Node.js for Newman
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+
+    - name: Install Newman
+      run: npm install -g newman
+
+    - name: Run API
+      run: |
+        dotnet run --no-build &
+        sleep 10
+
+    - name: Run API Tests with Newman
+      run: newman run ReminderApi.postman_collection.json --environment ReminderApi.postman_environment.json
+
+    - name: Stop API
+      run: pkill -f "dotnet run"
