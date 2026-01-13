@@ -5,8 +5,7 @@
 ## Setup
 ```bash
 dotnet restore
-dotnet ef database update
-dotnet user-secrets set "Brevo:ApiKey" "your-key"
+$env:Brevo__ApiKey = "your-key"
 dotnet run
 ```
 
