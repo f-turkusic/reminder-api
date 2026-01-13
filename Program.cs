@@ -14,6 +14,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHostedService<ReminderBackgroundService>();
+// Register service for sending emails
+builder.Services.AddHttpClient<IEmailService, BrevoEmailService>();
 
 var app = builder.Build();
 
