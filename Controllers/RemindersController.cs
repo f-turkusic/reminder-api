@@ -18,9 +18,9 @@ public class RemindersController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] CreateReminderRequest request)
     {
-        if (request.SendAt <= DateTime.UtcNow)
+        if (!ModelState.IsValid)
         {
-            return BadRequest("SendAt must be in the future.");
+            return BadRequest(ModelState);
         }
 
         var reminder = new Reminder

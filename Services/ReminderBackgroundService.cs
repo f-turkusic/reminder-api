@@ -57,14 +57,26 @@ public class ReminderBackgroundService : BackgroundService
                     // Log reminder to console
                     Console.WriteLine($"[{now:yyyy-MM-ddTHH:mm:ss}] Reminder sent: {reminder.Message}");
 
+                    bool emailSent = false;
                     // send email
                     if (!string.IsNullOrEmpty(reminder.Email) && _emailService != null)
                     {
-                        await _emailService.SendEmailAsync(reminder.Email, "Reminder", reminder.Message);
+                        try
+                        {
+                            await _emailService.SendEmailAsync(reminder.Email, "Reminder", reminder.Message);
+                            emailSent = true;
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.LogError(ex, "Failed to send email for reminder {Id}", reminder.Id);
+                        }
                     }
 
-                    // Mark as sent
-                    reminder.Status = ReminderStatus.Sent;
+                    // Mark as sent only if email was sent successfully
+                    if (emailSent)
+                    {
+                        reminder.Status = ReminderStatus.Sent;
+                    }
                 }
 
                 if (remindersToSend.Any())
