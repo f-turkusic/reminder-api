@@ -1,3 +1,5 @@
+using Asp.Versioning;
+using Asp.Versioning.Builder;
 using Microsoft.EntityFrameworkCore;
 using ReminderApi.Services;
 
@@ -5,13 +7,22 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddDbContext<ReminderDbContext>(options => 
+builder.Services.AddDbContext<ReminderDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"))); // Use SQLite if you want, change it to UseNpgsql for PostgreSQL or any other DBMS
 
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+
+//API versioning
+builder.Services.AddApiVersioning(options =>
+{
+    options.AssumeDefaultVersionWhenUnspecified = true;
+    options.DefaultApiVersion = new ApiVersion(1, 0);
+    options.ReportApiVersions = true;
+});
+
 builder.Services.AddSwaggerGen();
 builder.Services.AddHostedService<ReminderBackgroundService>();
 // Register service for sending emails

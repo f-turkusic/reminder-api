@@ -5,7 +5,7 @@ using ReminderApi.Models;
 namespace ReminderApi.Controllers;
 
 [ApiController]
-[Route("reminders")]
+[Route("v{version:apiVersion}/reminders")]
 public class RemindersController : ControllerBase
 {
     private readonly ReminderDbContext _db;
