@@ -6,6 +6,7 @@ using ReminderApi.Models;
 namespace ReminderApi.Controllers;
 
 [ApiController]
+[Authorize]
 [Route("v{version:apiVersion}/reminders")]
 public class RemindersController : ControllerBase
 {
