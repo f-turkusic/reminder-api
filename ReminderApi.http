@@ -1,6 +1,18 @@
 @ReminderApi_HostAddress = http://localhost:5125
 
-GET {{ReminderApi_HostAddress}}/weatherforecast/
-Accept: application/json
+### Get JWT Token - RUN THIS FIRST
+POST {{ReminderApi_HostAddress}}/auth/token
 
 ###
+
+### Create Reminder - Use variable for token
+@newToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6ImRldi11c2VyIiwiZXhwIjoxNzY5MDA3MzkyLCJpc3MiOiJyZW1pbmRlci1hcGktZGV2IiwiYXVkIjoicmVtaW5kZXItYXBpIn0.FrbLM8wgHYklg5HeQWlrg67f5DaLSsUzqrB0P8Xk7vQ
+POST {{ReminderApi_HostAddress}}/v1/reminders
+Authorization: Bearer {{newToken}}
+Content-Type: application/json
+
+{
+  "message": "Test reminder",
+  "sendAt": "2026-01-22T10:00:00Z",
+  "email": "test@example.com"
+}
