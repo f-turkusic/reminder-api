@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ReminderApi.Models;
@@ -5,6 +6,7 @@ using ReminderApi.Models;
 namespace ReminderApi.Controllers;
 
 [ApiController]
+[Authorize]
 [Route("v{version:apiVersion}/reminders")]
 public class RemindersController : ControllerBase
 {
